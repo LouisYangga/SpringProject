@@ -1,0 +1,194 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" style="color:white;">Patient Manager</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+  <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarColor02">
+     <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+           <a class="nav-link" (click)="onOpenModal(null, 'add')">Add Patient <span class="sr-only">(current)</span></a>
+        </li>
+     </ul>
+     <form class="form-inline my-2 my-lg-0">
+        <input type="search" (ngModelChange)="searchPatients(key.value)" #key="ngModel" ngModel
+         name="key" id="searchName" class="form-control mr-sm-2" placeholder="Search patients..." required>
+     </form>
+  </div>
+</nav>
+<div class="container" id="main-container">
+    <div class="row">
+        <div *ngFor= "let patient of patients" class="col-md-6 col-xl-3">
+            <div class="card m-b-30">
+                <div class="card-body row">
+                    <div class="col-6">
+                      <a href="">
+                        <img [src]="patient.gender === 'Male' ? 'https://bootdey.com/img/Content/avatar/avatar1.png' : 'https://bootdey.com/img/Content/avatar/avatar3.png'" alt="" class="img-fluid rounded-circle w-60">
+                      </a>
+                    </div>
+                    <div class="col-6 card-title align-self-center mb-0">
+                        <h5>Patient ID: {{patient?.id}}</h5>
+                        <p class="m-0">{{patient?.gender}}</p>
+                    </div>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><i class="fa fa-envelope float-right"></i>Full Name : {{patient?.firstName}} {{patient?.lastName}}</li>
+                    <li class="list-group-item"><i class="fa fa-phone float-right"></i>DOB : {{patient?.dob}}</li>
+                    <li class="list-group-item"><i class="fa fa-phone float-right"></i>Phone : {{patient?.phoneNumber}}</li>  
+                    <li class="list-group-item">
+                      <i class="fa fa-map-marker float-right"></i>
+                      Address: {{ patient?.address?.address }}, {{ patient?.address?.suburb }}, {{ patient?.address?.state }}, {{ patient?.address?.postcode }}
+                    </li>
+
+                </ul>
+                <div class="card-body">
+                    <div class="float-right btn-group btn-group-sm">
+                      <a (click)="onOpenModal(patient, 'update')" class="btn btn-primary tooltips" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+                      <a (click)="onOpenModal(patient, 'delete')" class="btn btn-secondary tooltips" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>
+                    </div>
+                    <ul class="social-links list-inline mb-0">
+                        <li class="list-inline-item"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Facebook"><i class="fa fa-facebook-f"></i></a></li>
+                        <li class="list-inline-item"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Twitter"><i class="fa fa-twitter"></i></a></li>
+                        <li class="list-inline-item"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Skype"><i class="fa fa-skype"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Add Patient Modal -->
+<div class="modal fade" id="addPatientModal" tabindex="-1" role="dialog" aria-labelledby="addPatientModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+       <div class="modal-header">
+          <h5 class="modal-title" id="addPatientModalLabel">Add Patient</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+       </div>
+       <div class="modal-body">
+          <form #addForm="ngForm" (ngSubmit)="onAddPatient(addForm)">
+          <div class="form-group">
+             <label for="firstName">First Name</label>
+             <input type="text" ngModel name="firstName" class="form-control" id="firstName" placeholder="First Name" required>
+          </div>
+          <div class="form-group">
+             <label for="lastName">Last Name</label>
+             <input type="text" ngModel name="lastName" class="form-control" id="lastName" placeholder="Last Name" required>
+          </div>
+          <div class="form-group">
+             <label for="gender">Gender</label>
+             <input type="text" ngModel name="gender" class="form-control" id="gender" placeholder="Gender" required>
+          </div>
+          <div class="form-group">
+             <label for="dob">Date of Birth</label>
+             <input type="text" ngModel name="dob" class="form-control" id="dob" placeholder="Date of Birth" required>
+          </div>
+          <div class="form-group">
+             <label for="phoneNumber">Phone Number</label>
+             <input type="text" ngModel name="phoneNumber" class="form-control" id="phoneNumber" placeholder="Phone Number" required>
+          </div>
+          <div class="form-group">
+             <label for="address">Address</label>
+             <input type="text" ngModel name="address" class="form-control" id="address" placeholder="Address" required>
+          </div>
+          <div class="form-group">
+             <label for="suburb">Suburb</label>
+             <input type="text" ngModel name="suburb" class="form-control" id="suburb" placeholder="Suburb" required>
+          </div>
+          <div class="form-group">
+             <label for="state">State</label>
+             <input type="text" ngModel name="state" class="form-control" id="state" placeholder="State" required>
+          </div>
+          <div class="form-group">
+             <label for="postcode">Postcode</label>
+             <input type="text" ngModel name="postcode" class="form-control" id="postcode" placeholder="Postcode" required>
+          </div>
+          <div class="modal-footer">
+             <button type="button" id="add-patient-form" class="btn btn-secondary" data-dismiss="modal">Close</button>
+             <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+          </form>
+       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editPatientModal" tabindex="-1" role="dialog" aria-labelledby="editPatientModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+       <div class="modal-header">
+          <h5 class="modal-title" id="editPatientModalLabel">Edit Patient {{editPatient?.firstName}} {{editPatient?.lastName}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          </button>
+       </div>
+       <div class="modal-body">
+        <form #editForm="ngForm">
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input type="text" ngModel="{{editPatient?.firstName}}" name="firstName" class="form-control" id="firstName" placeholder="First Name" required>
+            </div>
+            <input type="hidden" ngModel="{{editPatient?.id}}" name="id" class="form-control" id="id" placeholder="id">
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" ngModel="{{editPatient?.lastName}}" name="lastName" class="form-control" id="lastName" placeholder="Last Name" required>
+            </div>
+            <div class="form-group">
+              <label for="gender">Gender</label>
+              <input type="text" ngModel="{{editPatient?.gender}}" name="gender" class="form-control" id="gender" placeholder="Gender" required>
+            </div>
+            <div class="form-group">
+              <label for="dob">Date of Birth</label>
+              <input type="text" ngModel="{{editPatient?.dob}}" name="dob" class="form-control" id="dob" placeholder="Date of Birth" required>
+            </div>
+            <div class="form-group">
+              <label for="phoneNumber">Phone Number</label>
+              <input type="text" ngModel="{{editPatient?.phoneNumber}}" name="phoneNumber" class="form-control" id="phoneNumber" placeholder="Phone Number" required>
+            </div>
+            <div class="form-group">
+              <label for="address">Address</label>
+              <input type="text" ngModel="{{editPatient?.address?.address}}" name="address" class="form-control" id="address" placeholder="Address" required>
+            </div>
+            <div class="form-group">
+              <label for="suburb">Suburb</label>
+              <input type="text" ngModel="{{editPatient?.address?.suburb}}" name="suburb" class="form-control" id="suburb" placeholder="Suburb" required>
+            </div>
+            <div class="form-group">
+              <label for="state">State</label>
+              <input type="text" ngModel="{{editPatient?.address?.state}}" name="state" class="form-control" id="state" placeholder="State" required>
+            </div>
+            <div class="form-group">
+              <label for="postcode">Postcode</label>
+              <input type="text" ngModel="{{editPatient?.address?.postcode}}" name="postcode" class="form-control" id="postcode" placeholder="Postcode" required>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button (click)="onEditPatient(editForm)" data-dismiss="modal" class="btn btn-primary" >Save changes</button>
+            </div>
+          </form>
+       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deletePatientModal" tabindex="-1" role="dialog" aria-labelledby="deletePatientModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+     <div class="modal-content">
+        <div class="modal-header">
+           <h5 class="modal-title" id="deletePatientModalLabel">Delete Patient</h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+           </button>
+        </div>
+        <div class="modal-body">
+           <p>Are you sure you want to delete patient {{ deletePatient?.firstName }} {{ deletePatient?.lastName }}?</p>
+        </div>
+        <div class="modal-footer">
+           <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+           <button (click)="onDeletePatient(deletePatient?.id || 0)"  data-dismiss="modal" class="btn btn-danger">Yes</button>
+        </div>
+     </div>
+  </div>
+</div>
